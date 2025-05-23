@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Local Community Event Portal</title>
+<style>
+  /* Multi-color palette */
+  :root {
+    --primary-color: #d94f3d;   /* warm red */
+    --secondary-color: #fce9d8; /* soft peach */
+    --accent-color: #f4a261;    /* bright orange */
+    --highlight-color: #e9c46a; /* mellow yellow */
+    --font-color: #3b2f2f;      /* dark brown text */
+    --section-bg: #f9f5f0;      /* very pale cream */
+    --border-color: #9c6644;    /* muted brown */
+    --button-hover: #bf683b;    /* darker orange */
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 0;
+    background: var(--section-bg);
+    color: var(--font-color);
+    line-height: 1.6;
+    background-image: none;
+  }
+
+  header {
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    padding: 30px 15px;
+    text-align: center;
+    color: var(--secondary-color);
+    font-weight: 900;
+    font-size: 3rem;
+    font-family: 'Yuji Mai', cursive, 'Segoe UI', sans-serif;
+    text-shadow: 2px 2px var(--border-color);
+    letter-spacing: 0.12em;
+    border-bottom: 8px solid var(--highlight-color);
+  }
+
+  nav {
+    background-color: var(--highlight-color);
+    padding: 12px 0;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(217, 79, 61, 0.3);
+  }
+
+  nav a {
+    color: var(--primary-color);
+    text-decoration: none;
+    margin: 0 22px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    font-family: 'Segoe UI', sans-serif;
+    position: relative;
+  }
+  nav a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: var(--accent-color);
+    transition: width 0.3s;
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+  }
+  nav a:hover {
+    color: var(--accent-color);
+  }
+  nav a:hover::after {
+    width: 100%;
+  }
+
+  #welcomeBanner {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: var(--secondary-color);
+    padding: 20px 15px;
+    margin: 30px auto;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(217, 79, 61, 0.5);
+    max-width: 850px;
+    letter-spacing: 0.08em;
+    font-family: 'Yuji Mai', cursive, 'Segoe UI', sans-serif;
+  }
+
+  .highlight {
+    font-weight: 900;
+    background-color: var(--highlight-color);
+    color: var(--primary-color);
+    padding: 6px 14px;
+    border-radius: 8px;
+    box-shadow: 1px 1px 7px rgba(156, 102, 68, 0.3);
+    display: inline-block;
+  }
+
+  section {
+    background-color: var(--secondary-color);
+    margin: 30px auto;
+    max-width: 900px;
+    padding: 30px 35px;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(156, 102, 68, 0.12);
+    border: 3px solid var(--border-color);
+    font-size: 1.15rem;
+    font-family: 'Segoe UI', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  section::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 150px;
+    height: 150px;
+    background: url("data:image/svg+xml;utf8,<svg width='100' height='100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='40' stroke='%23d94f3d' stroke-width='3' fill='none' opacity='0.07'/></svg>") no-repeat center;
+    background-size: contain;
+    pointer-events: none;
+  }
+
+  section h2 {
+    font-family: 'Yuji Mai', cursive, 'Segoe UI', sans-serif;
+    color: var(--primary-color);
+    font-weight: 900;
+    font-size: 2.4rem;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 0.1em;
+    text-shadow: 1px 1px var(--highlight-color);
+  }
+
+  /* Event gallery */
+  #events table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 24px 30px;
+    margin-top: 25px;
+  }
+  #events td {
+    text-align: center;
+    padding: 8px;
+    background: var(--section-bg);
+    border: 2px solid var(--accent-color);
+    border-radius: 18px;
+    box-shadow: 3px 3px 14px rgba(244, 162, 97, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+  #events td:hover {
+    transform: scale(1.07);
+    box-shadow: 6px 6px 22px rgba(217, 79, 61, 0.6);
+    border-color: var(--primary-color);
+  }
+  #events img {
+    width: 150px;
+    border-radius: 14px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 2px 2px 9px rgba(217, 79, 61, 0.7);
+  }
+
+  form, .feedback, .location {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  input, select, textarea, button, output {
+    padding: 14px 18px;
+    font-size: 1.15rem;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    font-family: 'Segoe UI', sans-serif;
+    resize: vertical;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 10px var(--primary-color);
+  }
+
+  button {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    border-radius: 16px;
+    box-shadow: 0 5px 12px rgba(217, 79, 61, 0.45);
+    transition: background 0.3s ease;
+    letter-spacing: 0.08em;
+  }
+
+  button:hover {
+    background: var(--button-hover);
+    box-shadow: 0 7px 17px rgba(191, 104, 59, 0.85);
+  }
+
+  textarea {
+    min-height: 110px;
+  }
+
+  output {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: 6px;
+    font-size: 1.05rem;
+    min-height: 1.8em;
+  }
+
+  .feedback img {
+    width: 190px;
+    border-radius: 18px;
+    border: 4px solid var(--primary-color);
+    margin: 16px auto;
+    display: block;
+    cursor: pointer;
+    transition: width 0.3s ease;
+  }
+  .feedback img:hover {
+    width: 220px;
+    box-shadow: 0 0 20px var(--primary-color);
+  }
+
+  video {
+    width: 100%;
+    max-width: 720px;
+    border-radius: 18px;
+    display: block;
+    margin: 35px auto 14px;
+    box-shadow: 0 8px 22px rgba(217, 79, 61, 0.35);
+    border: 5px solid var(--primary-color);
+  }
+
+  #videoStatus {
+    text-align: center;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 45px;
+    letter-spacing: 0.06em;
+    font-size: 1.25rem;
+  }
+
+  .location {
+    text-align: center;
+    max-width: 650px;
+    margin: 35px auto 50px;
+    border: 4px solid var(--accent-color);
+    padding: 30px 28px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--highlight-color), var(--secondary-color));
+    box-shadow: 0 7px 20px rgba(244, 162, 97, 0.4);
+  }
+  .location button {
+    max-width: 240px;
+    margin: 16px auto;
+    font-weight: 800;
+  }
+  .location p {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 14px 0;
+    color: var(--font-color);
+    letter-spacing: 0.04em;
+  }
+
+  footer {
+    background-color: var(--highlight-color);
+    color: var(--primary-color);
+    text-align: center;
+    padding: 20px 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    border-top: 5px solid var(--primary-color);
+    font-size: 1.05rem;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 768px) {
+    nav a {
+      margin: 0 10px;
+      font-size: 1rem;
+    }
+    #events img {
+      width: 120px;
+    }
+  }
+  @media (max-width: 480px) {
+    header {
+      font-size: 2.2rem;
+      padding: 24px 12px;
+    }
+    section {
+      padding: 20px 18px;
+    }
+    #events table {
+      border-spacing: 16px 20px;
+    }
+    #events img {
+      width: 100px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>Local Community Event Portal</header>
+
+<nav>
+  <a href="#events">Events</a>
+  <a href="#photoEvent">Photo Event</a>
+  <a href="#feedback">Feedback</a>
+  <a href="#location">Location</a>
+</nav>
+
+<section id="welcomeBanner">
+  Welcome! Explore our <span class="highlight">exciting</span> events and share your best moments!
+</section>
+
+<section id="events">
+  <h2>Upcoming Events</h2>
+  <table>
+    <tr>
+      <td><img src="download (1).jfif" alt="Anime Festival" /></td>
+      <td><img src="download (2).jfif" alt="Cosplay Contest" /></td>
+      <td><img src="download (3).jfif" alt="Manga Workshop" /></td>
+    </tr>
+  </table>
+</section>
+
+<section id="photoEvent">
+  <h2>Photo Event</h2>
+  <form id="photoForm" enctype="multipart/form-data">
+    <label for="participantName">Your Name:</label>
+    <input id="participantName" name="participantName" type="text" required placeholder="Enter your full name" />
+
+    <label for="photoUpload">Upload Your Photo:</label>
+    <input id="photoUpload" name="photoUpload" type="file" accept="image/*" required />
+
+    <label for="photoDescription">Photo Description:</label>
+    <textarea id="photoDescription" name="photoDescription" rows="4" placeholder="Tell us about your photo" required></textarea>
+
+    <button type="submit">Submit Photo</button>
+    <output id="photoResult"></output>
+  </form>
+</section>
+
+<section class="feedback" id="feedback">
+  <h2>Feedback & Photos</h2>
+  <img src="https://i.pinimg.com/originals/6a/1b/3c/6a1b3c8f9f98a8d8d2b94ae0ec08b667.jpg" alt="Community Feedback" />
+  <p>Thank you for your support! Share your event photos and feedback with us.</p>
+</section>
+
+<section id="videoSection">
+  <h2>Event Highlight Video</h2>
+  <video id="eventVideo" controls>
+    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm" />
+    Your browser does not support the video tag.
+  </video>
+  <div id="videoStatus"></div>
+</section>
+
+<section class="location" id="location">
+  <h2>Our Location</h2>
+  <p>Find us at the Community Center, 123 Main St, YourCity.</p>
+  <button id="showMapBtn">Show Map</button>
+  <div id="mapContainer"></div>
+</section>
+
+<footer>
+  &copy; 2025 Local Community Event Portal — All rights reserved.
+</footer>
+
+<script>
+  // Photo event form submission handling
+  document.getElementById('photoForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const name = this.participantName.value.trim();
+    const photoInput = this.photoUpload;
+    const description = this.photoDescription.value.trim();
+    const output = document.getElementById('photoResult');
+
+    if (!photoInput.files || photoInput.files.length === 0) {
+      output.textContent = 'Please upload a photo.';
+      return;
+    }
+
+    const file = photoInput.files[0];
+    if (!file.type.startsWith('image/')) {
+      output.textContent = 'Uploaded file is not an image.';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      output.innerHTML = `
+        <p>Thanks, <strong>${name}</strong>! Your photo has been submitted.</p>
+        <p>Description: ${description}</p>
+        <img src="${event.target.result}" alt="Uploaded photo preview" style="max-width: 100%; border-radius: 12px; border: 3px solid var(--primary-color); margin-top: 12px;" />
+      `;
+    };
+    reader.readAsDataURL(file);
+
+    this.reset();
+  });
+
+  // Video status update
+  const video = document.getElementById('eventVideo');
+  const videoStatus = document.getElementById('videoStatus');
+  video.addEventListener('play', () => {
+    videoStatus.textContent = 'Video is playing... Enjoy!';
+  });
+  video.addEventListener('pause', () => {
+    videoStatus.textContent = 'Video paused.';
+  });
+  video.addEventListener('ended', () => {
+    videoStatus.textContent = 'Thanks for watching!';
+  });
+
+  // Location map toggle (simple)
+  const mapBtn = document.getElementById('showMapBtn');
+  const mapContainer = document.getElementById('mapContainer');
+  let mapVisible = false;
+  mapBtn.addEventListener('click', () => {
+    if (!mapVisible) {
+      mapContainer.innerHTML = '<iframe src="https://maps.google.com/maps?q=123%20Main%20St%20YourCity&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>';
+      mapBtn.textContent = 'Hide Map';
+    } else {
+      mapContainer.innerHTML = '';
+      mapBtn.textContent = 'Show Map';
+    }
+    mapVisible = !mapVisible;
+  });
+</script>
+
+</body>
+</html>
