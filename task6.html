@@ -1,0 +1,21 @@
+<input type="text" id="phone" onblur="validatePhone(this)">
+<select onchange="showFee(this)">
+  <option value="10">Music - $10</option>
+  <option value="20">Sports - $20</option>
+</select>
+<button onclick="alert('Submitted!')">Submit</button>
+<img src="event.jpg" ondblclick="this.style.width='300px'" style="width:150px;">
+<textarea onkeyup="countChars(this)"></textarea>
+<p id="charCount"></p>
+
+<script>
+  function validatePhone(input) {
+    if (!/^\d{10}$/.test(input.value)) alert('Invalid phone number!');
+  }
+  function showFee(select) {
+    alert("Fee: $" + select.value);
+  }
+  function countChars(textarea) {
+    document.getElementById('charCount').innerText = textarea.value.length + " characters";
+  }
+</script>
