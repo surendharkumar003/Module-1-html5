@@ -1,0 +1,14 @@
+<form onsubmit="document.getElementById('outputMsg').value='Registered successfully!'; return false;">
+    <input type="text" name="name" placeholder="Your Name" required autofocus>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="date" name="date" required>
+    <select name="eventType" required>
+      <option value="">Select Event</option>
+      <option value="music">Music</option>
+      <option value="sports">Sports</option>
+    </select>
+    <textarea name="message" placeholder="Message..."></textarea>
+    <button type="submit">Register</button>
+    <output id="outputMsg"></output>
+  </form>
+  
